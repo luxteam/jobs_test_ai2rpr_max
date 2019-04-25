@@ -3,7 +3,7 @@
 
     <outpath value="{OutputDir}"/>
     <variable name="GroupName" value="AiTwoSided"/>
-    <variable name="ScenesDirSubPath" value="Surface\\AiTwoSided"/>
+    <variable name="ScenesDirSubPath" value="Surface\\{GroupName}"/>
 
     <execute command='python "{ResourcesDir}\\orRender.py"'>
         <argument>--tests_list "{Root}\\Tests\\{GroupName}\\test.cases.json"</argument>

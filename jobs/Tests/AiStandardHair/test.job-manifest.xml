@@ -2,10 +2,10 @@
 <job-manifest name="Smoke">
 
     <outpath value="{OutputDir}"/>
-    <variable name="GroupName" value="AiStandartSurfase"/>
-    <variable name="ScenesDirSubPath" value="Surface\\AiStandartSurfase"/>
+    <variable name="GroupName" value="AiStandardHair"/>
+    <variable name="ScenesDirSubPath" value="Surface\\{GroupName}"/>
 
-    <execute command='python "{ResourcesDir}\\orRender.py"'>
+    <execute command='python "{ResourcesDir}\\orRender.py"' timeout="9000">
         <argument>--tests_list "{Root}\\Tests\\{GroupName}\\test.cases.json"</argument>
         <argument>--app_path "{Tool}"</argument>
         <argument>--assets_path "{ScenesDir}\\{ScenesDirSubPath}"</argument>

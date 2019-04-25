@@ -3,7 +3,7 @@
 
     <outpath value="{OutputDir}"/>
     <variable name="GroupName" value="bump2d"/>
-    <variable name="ScenesDirSubPath" value="Maps\\Surface\\{GroupName}"/>
+    <variable name="ScenesDirSubPath" value="Maps\\Bump\\{GroupName}"/>
 
     <execute command='python "{ResourcesDir}\\orRender.py"'>
         <argument>--tests_list "{Root}\\Tests\\{GroupName}\\test.cases.json"</argument>

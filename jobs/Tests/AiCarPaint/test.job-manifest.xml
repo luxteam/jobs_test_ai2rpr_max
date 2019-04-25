@@ -3,9 +3,9 @@
 
     <outpath value="{OutputDir}"/>
     <variable name="GroupName" value="AiCarPaint"/>
-    <variable name="ScenesDirSubPath" value="Surface\\AiCarPaint"/>
+    <variable name="ScenesDirSubPath" value="Surface\\{GroupName}"/>
 
-    <execute command='python "{ResourcesDir}\\orRender.py"'>
+    <execute command='python "{ResourcesDir}\\orRender.py"' timeout="9000">
         <argument>--tests_list "{Root}\\Tests\\{GroupName}\\test.cases.json"</argument>
         <argument>--app_path "{Tool}"</argument>
         <argument>--assets_path "{ScenesDir}\\{ScenesDirSubPath}"</argument>
