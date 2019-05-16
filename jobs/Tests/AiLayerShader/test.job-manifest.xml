@@ -14,11 +14,9 @@
 
     <execute command='python "{ResourcesDir}\\rprRender.py"'>
         <argument>--tests_list "{Root}\\Tests\\{GroupName}\\test.cases.json"</argument>
-        <argument>--render_path "{Tool}\Maya.exe"</argument>
-        <argument>--scene_path "{ScenesDir}\\{ScenesDirSubPath}"</argument>
+        <argument>--app_path "{Tool}"</argument>
+        <argument>--assets_path "{ScenesDir}\\{ScenesDirSubPath}"</argument>
         <argument>--output_dir "{OutputDir}"</argument>
-        <argument>--output_img_dir "{OutputDir}"</argument>
-        <argument>--output_file_ext png</argument>
     </execute>
 
     <execute command='python "{CWD}/Scripts/make_report_json.py"'>
