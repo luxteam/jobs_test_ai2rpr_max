@@ -3,7 +3,7 @@
 
     <outpath value="{OutputDir}"/>
     <variable name="GroupName" value="ColorConvert"/>
-    <variable name="ScenesDirSubPath" value="Surface\\{GroupName}"/>
+    <variable name="ScenesDirSubPath" value="Maps\\Color\\{GroupName}"/>
 
     <execute command='python "{ResourcesDir}\\orRender.py"' timeout="9000">
         <argument>--tests_list "{Root}\\Tests\\{GroupName}\\test.cases.json"</argument>

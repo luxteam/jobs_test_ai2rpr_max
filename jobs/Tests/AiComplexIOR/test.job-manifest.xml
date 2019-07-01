@@ -3,7 +3,7 @@
 
     <outpath value="{OutputDir}"/>
     <variable name="GroupName" value="AiComplexIOR"/>
-    <variable name="ScenesDirSubPath" value="Surface\\{GroupName}"/>
+    <variable name="ScenesDirSubPath" value="Maps\\Surface\\{GroupName}"/>
 
     <execute command='python "{ResourcesDir}\\orRender.py"' timeout="9000">
         <argument>--tests_list "{Root}\\Tests\\{GroupName}\\test.cases.json"</argument>
