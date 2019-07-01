@@ -1,4 +1,7 @@
 AiNormalMap
 bump2d
+RoundCorners
 Math
-AiShadowMatte
+ColorConvert
+ColorCorrect
+ColorJitter
