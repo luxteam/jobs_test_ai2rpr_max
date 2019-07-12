@@ -1,14 +1,14 @@
 [
-  {"scene": "aiFog_01.max", "status": "active"},
-  {"scene": "aiFog_02.max", "status": "active"},
-  {"scene": "aiFog_03.max", "status": "active"},
-  {"scene": "aiFog_04.max", "status": "active"},
-  {"scene": "aiFog_05.max", "status": "active"},
-  {"scene": "aiFog_06.max", "status": "active"},
-  {"scene": "aiFog_07.max", "status": "active"},
-  {"scene": "aiFog_08.max", "status": "active"},
-  {"scene": "aiFog_09.max", "status": "active"},
-  {"scene": "aiFog_10.max", "status": "active"},
-  {"scene": "aiFog_11.max", "status": "active"},
-  {"scene": "aiFog_12.max", "status": "active"}
+  {"name": "aiFog_01.max", "status": "active"},
+  {"name": "aiFog_02.max", "status": "active"},
+  {"name": "aiFog_03.max", "status": "active"},
+  {"name": "aiFog_04.max", "status": "active"},
+  {"name": "aiFog_05.max", "status": "active"},
+  {"name": "aiFog_06.max", "status": "active"},
+  {"name": "aiFog_07.max", "status": "active"},
+  {"name": "aiFog_08.max", "status": "active"},
+  {"name": "aiFog_09.max", "status": "active"},
+  {"name": "aiFog_10.max", "status": "active"},
+  {"name": "aiFog_11.max", "status": "active"},
+  {"name": "aiFog_12.max", "status": "active"}
 ]
