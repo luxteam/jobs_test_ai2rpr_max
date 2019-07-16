@@ -12,7 +12,7 @@
         <argument>--output_dir "{OutputDir}"</argument>
     </execute>
 
-    <execute command='python "{ResourcesDir}\\rprRender.py"'>
+    <execute command='python "{ResourcesDir}\\rprRender.py"' timeout="9000">
         <argument>--tests_list "{Root}\\Tests\\{GroupName}\\test.cases.json"</argument>
         <argument>--app_path "{Tool}"</argument>
         <argument>--assets_path "{ScenesDir}\\{ScenesDirSubPath}"</argument>
