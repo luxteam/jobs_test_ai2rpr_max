@@ -17,7 +17,7 @@ function main = (
             renderers.current = arnoldRenderer
         )
 
-        rendered_image_path = "{output_path}" + "\\Color\\" + maxFileName + ".png"
+        rendered_image_path = "{output_path}" + "\\Color\\" + maxFileName + ".jpg"
 
         render outputfile:rendered_image_path
     )
