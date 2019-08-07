@@ -1,0 +1,32 @@
+<?xml version="1.0" ?>
+<job-manifest name="Smoke">
+
+    <outpath value="{OutputDir}"/>
+    <variable name="GroupName" value="aiBlackBody"/>
+    <variable name="ScenesDirSubPath" value="Maps\\Utility\\{GroupName}"/>
+
+    <execute command='python "{ResourcesDir}\\orRender.py"' timeout="9000">
+        <argument>--tests_list "{Root}\\Tests\\{GroupName}\\test.cases.json"</argument>
+        <argument>--app_path "{Tool}"</argument>
+        <argument>--assets_path "{ScenesDir}\\{ScenesDirSubPath}"</argument>
+        <argument>--output_dir "{OutputDir}"</argument>
+    </execute>
+
+    <execute command='python "{ResourcesDir}\\rprRender.py"' timeout="9000">
+        <argument>--tests_list "{Root}\\Tests\\{GroupName}\\test.cases.json"</argument>
+        <argument>--app_path "{Tool}"</argument>
+        <argument>--assets_path "{ScenesDir}\\{ScenesDirSubPath}"</argument>
+        <argument>--output_dir "{OutputDir}"</argument>
+    </execute>
+
+    <execute command='python "{CWD}/Scripts/make_report_json.py"'>
+        <argument>--work_dir "{OutputDir}"</argument>
+    </execute>
+
+    <execute command='python "{CommonDir}/scripts/ImageComparator/compareByJSON.py"'>
+        <argument>--work_dir "{OutputDir}"</argument>
+        <argument>--base_dir "{BaselineDir}/{GroupName}"</argument>
+        <argument>--case_suffix _AI.json</argument>
+    </execute>
+
+</job-manifest>

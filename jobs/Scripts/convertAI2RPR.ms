@@ -956,7 +956,7 @@ fn convertAiSqrt origMap =(
 )
 
 fn convertAiExp origMap =(
-	local r = RPR_Arithmetic()
+	local r = rpr_color_value()
 	r.name = origMap.name + rprPostfixStr
 
 	-- log to file 
@@ -973,9 +973,7 @@ fn convertAiExp origMap =(
 		)
 	)
 
-	set_property r "operator" 0
-	set_property r "Color1" (color exp_color[1] exp_color[2] exp_color[3])
-	set_property r "Color2" (color 255 255 255)
+	set_property r "Color" (color exp_color[1] exp_color[2] exp_color[3])
 
 	-- logging
 	end_log origMap
@@ -1107,6 +1105,233 @@ fn convertAiNegate origMap = (
 	r
 )
 
+fn convertAiReciprocal origMap = (
+	local r = rpr_arithmetic()
+	r.name = origMap.name + rprPostfixStr
+
+	-- log to file 
+	start_log origMap r
+
+	set_property r "operator" 3
+	set_property r "Color1" (color 255 255 255)
+	copy_property r origMap "Color2" "input"
+	copy_property r origMap "color1texmap" "input_shader"
+
+	-- logging
+	end_log origMap
+
+	r
+)
+
+fn convertAiSign origMap = (
+	local r = rpr_color_value()
+	r.name = origMap.name + rprPostfixStr
+
+	-- log to file 
+	start_log origMap r
+
+	input_color = get_property origMap "input"
+	output_color = color 0 0 0
+	if input_color.red > 0 then output_color.red = 255
+	if input_color.green > 0 then output_color.green = 255
+	if input_color.blue > 0 then output_color.blue = 255
+	set_property r "Color" output_color
+
+	-- logging
+	end_log origMap
+
+	r
+)
+
+fn convertAiTrigo origMap = (
+	local r = rpr_arithmetic()
+	r.name = origMap.name + rprPostfixStr
+
+	-- log to file 
+	start_log origMap r
+
+	input_color = get_property origMap "input"
+	frequency = get_property origMap "frequency"
+	phase = get_property origMap "phase"
+	output_color = point3 (input_color.red * frequency + phase) (input_color.green * frequency + phase) (input_color.blue * frequency + phase)
+	set_property r "Color1" output_color
+	operation = get_property origMap "function"
+	local operator = case operation of (
+		0: 5
+		1: 4
+		2: 6
+		3: 19
+		4: 20
+		5: 21
+		6: 0
+		7: 0
+		8: 0
+	)
+	set_property r "operator" operator
+
+	-- logging
+	end_log origMap
+
+	r
+)
+
+fn convertLayerOperations A_color A_map B_color B_map operation =(
+	if operation == 10 do ( -- from : (B - A)
+		local r = rpr_arithmetic()
+		set_property r "operator" 1
+		set_property r "Color1" B_color
+		set_property r "color0texmap" B_map
+		set_property r "Color2" A_color
+		set_property r "color1texmap" A_map
+		return r
+	)
+	if operation == 20 do ( -- max(A,B)
+		local r = rpr_arithmetic()
+		set_property r "operator" 13
+		set_property r "Color1" A_color
+		set_property r "color0texmap" A_map
+		set_property r "Color2" B_color
+		set_property r "color1texmap" B_map
+		return r
+	)
+	if operation == 21 do ( -- min(A,B)
+		local r = rpr_arithmetic()
+		set_property r "operator" 12
+		set_property r "Color1" A_color
+		set_property r "color0texmap" A_map
+		set_property r "Color2" B_color
+		set_property r "color1texmap" B_map
+		return r
+	)
+	if operation == 22 do ( -- (A - B)
+		local r = rpr_arithmetic()
+		set_property r "operator" 1
+		set_property r "Color1" A_color
+		set_property r "color0texmap" A_map
+		set_property r "Color2" B_color
+		set_property r "color1texmap" B_map
+		return r
+	)
+	if operation == 28 do ( -- phoenix : min(A,B) - max(A,B) + 1
+		local min_arith = rpr_arithmetic()
+		set_property min_arith "operator" 12
+		set_property min_arith "Color1" A_color
+		set_property min_arith "color0texmap" A_map
+		set_property min_arith "Color2" B_color
+		set_property min_arith "color1texmap" B_map
+		local max_arith = rpr_arithmetic()
+		set_property max_arith "operator" 13
+		set_property max_arith "Color1" A_color
+		set_property max_arith "color0texmap" A_map
+		set_property max_arith "Color2" B_color
+		set_property max_arith "color1texmap" B_map
+		local sub_arith = rpr_arithmetic()
+		set_property sub_arith "operator" 1
+		set_property sub_arith "color0texmap" min_arith
+		set_property sub_arith "color1texmap" max_arith
+		local add_arith = rpr_arithmetic()
+		set_property add_arith "operator" 0
+		set_property add_arith "color0texmap" sub_arith
+		set_property add_arith "Color2" (color 255 255 255)
+		return add_arith
+	)
+	if operation == 30 do ( -- (A + B)
+		local r = rpr_arithmetic()
+		set_property r "operator" 0
+		set_property r "Color1" A_color
+		set_property r "color0texmap" A_map
+		set_property r "Color2" B_color
+		set_property r "color1texmap" B_map
+		return r
+	)
+	if operation == 35 do ( -- subract : A + B - 1
+		local add_arith = rpr_arithmetic()
+		set_property add_arith "operator" 0
+		set_property add_arith "Color1" A_color
+		set_property add_arith "color0texmap" A_map
+		set_property add_arith "Color2" B_color
+		set_property add_arith "color1texmap" B_map
+		local sub_arith = rpr_arithmetic()
+		set_property sub_arith "operator" 1
+		set_property sub_arith "color0texmap" add_arith
+		set_property sub_arith "Color2" (color 255 255 255)
+		return sub_arith
+	)
+)
+
+fn convertAiLayerRGBA origMap = (
+	local r = undefined
+	A_color = undefined
+	A_map = undefined
+	B_color = undefined
+	B_map = undefined
+
+	first_material = true
+	second_material = true
+	for i=1 to 8 do (
+		if get_property origMap ("enable" + i as string) do (
+			if get_property origMap ("input" + i as string) != undefined do (
+				if first_material then (
+					A_color = get_property origMap ("input" + i as string)
+					A_map = get_property origMap ("input" + i as string + "_shader")
+					first_material = false
+				) else if second_material then (
+					B_color = get_property origMap ("input" + i as string)
+					B_map = get_property origMap ("input" + i as string + "_shader")
+					operation = get_property origMap ("operation" + i as string)
+					second_material = false
+					
+					r = convertLayerOperations A_color A_map B_color B_map operation
+					r.name = origMap.name + rprPostfixStr
+
+					-- log to file 
+					start_log origMap r
+
+				) else (
+					A_color = (color 128 128 128)
+					A_map = r
+					B_color = get_property origMap ("input" + i as string)
+					B_map = get_property origMap ("input" + i as string + "_shader")
+					operation = get_property origMap ("operation" + i as string)
+					r = convertLayerOperations A_color A_map B_color B_map operation
+				)
+			)
+		)
+	)
+
+	-- logging
+	end_log origMap
+
+	r
+)
+
+
+fn convertAiVectorToRGB origMap = (
+
+	if get_property origMap "mode" == 1 then (
+
+		local r = rpr_color_value()
+		r.name = origMap.name + rprPostfixStr
+
+		-- log to file 
+		start_log origMap r
+
+		input_vector = get_property origMap "input"
+		vector_length = sqrt (pow input_vector[1] 2 + pow input_vector[2] 2 + pow input_vector[3] 2)
+		invert_length = 1 / vector_length
+		normalize_vector = point3 (input_vector[1] * invert_length) (input_vector[2] * invert_length) (input_vector[3] * invert_length)
+		remap_vector = point3 (remap_value normalize_vector[1] 1 0 255 0) (remap_value normalize_vector[2] 1 0 255 0) (remap_value normalize_vector[3] 1 0 255 0)
+		set_property r "Color" remap_vector
+
+		-- logging
+		end_log origMap
+
+		r
+	) else (
+		return convertUnsupportedUtility(origMap)
+	)
+)
+
 fn convertAiFlat origMap = (
 	local r = rpr_color_value()
 	r.name = origMap.name + rprPostfixStr
@@ -1187,11 +1412,7 @@ fn convertAiColorCorrect origMap = (
 	copy_property arith_add origMap "color1Texmap" "add_shader"
 
 	set_property r "color1Texmap" arith_add
-	if get_property origMap "invert" then (
-		set_property r "color0Texmap" arith_invert
-	) else (
-		copy_property r origMap "color0Texmap" "input_shader"
-	)
+	copy_property r origMap "color0Texmap" "input_shader"
 	copy_property r origMap "Weight" "mask"
 	copy_property r origMap "weightTexmap" "mask_shader"
 
@@ -1531,6 +1752,11 @@ fn convertMaterial orig_mtl =(
 		ai_flat: errorCatching convertAiFlat orig_mtl
 		ai_negate: errorCatching convertAiNegate orig_mtl
 		ai_toon: errorCatching convertAiToon orig_mtl
+		ai_reciprocal: errorCatching convertAiReciprocal orig_mtl
+		ai_vector_to_rgb: errorCatching convertAiVectorToRGB orig_mtl
+		ai_sign: errorCatching convertAiSign orig_mtl
+		ai_trigo: errorCatching convertAiTrigo orig_mtl
+		ai_layer_rgba: errorCatching convertAiLayerRGBA orig_mtl
 
 		--following utilies will be replaced with default rpr arithmetic node, will be supported later
 		ai_round_corners: errorCatching convertUnsupportedUtility orig_mtl
@@ -1544,7 +1770,6 @@ fn convertMaterial orig_mtl =(
 		ai_rgba_to_float: errorCatching convertUnsupportedUtility orig_mtl
 		ai_rgb_to_vector: errorCatching convertUnsupportedUtility orig_mtl
 		ai_shuffle: errorCatching convertUnsupportedUtility orig_mtl
-		ai_vector_to_rgb: errorCatching convertUnsupportedUtility orig_mtl
 		ai_physical_sky: errorCatching convertUnsupportedUtility orig_mtl
 		ai_compare: errorCatching convertUnsupportedUtility orig_mtl
 		ai_complement: errorCatching convertUnsupportedUtility orig_mtl
@@ -1556,10 +1781,7 @@ fn convertMaterial orig_mtl =(
 		ai_matrix_multiply_vector: errorCatching convertUnsupportedUtility orig_mtl
 		ai_random: errorCatching convertUnsupportedUtility orig_mtl
 		ai_range: errorCatching convertUnsupportedUtility orig_mtl
-		ai_reciprocal: errorCatching convertUnsupportedUtility orig_mtl
-		ai_sign: errorCatching convertUnsupportedUtility orig_mtl
 		ai_space_transform: errorCatching convertUnsupportedUtility orig_mtl
-		ai_trigo: errorCatching convertUnsupportedUtility orig_mtl
 		ai_state_float: errorCatching convertUnsupportedUtility orig_mtl
 		ai_state_int: errorCatching convertUnsupportedUtility orig_mtl
 		ai_state_vector: errorCatching convertUnsupportedUtility orig_mtl
@@ -1570,7 +1792,7 @@ fn convertMaterial orig_mtl =(
 		ai_cell_noise: errorCatching convertUnsupportedUtility orig_mtl
 		ai_checkerboard: errorCatching convertUnsupportedUtility orig_mtl
 		ai_image: errorCatching convertUnsupportedUtility orig_mtl
-		ai_layer_rgba: errorCatching convertUnsupportedUtility orig_mtl
+		
 		ai_layer_float: errorCatching convertUnsupportedUtility orig_mtl
 		ai_ramp_rgb: errorCatching convertUnsupportedUtility orig_mtl
 		ai_ramp_float: errorCatching convertUnsupportedUtility orig_mtl
