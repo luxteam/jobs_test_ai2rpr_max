@@ -65,7 +65,7 @@ def main():
             # TODO: fill empty fileds
             case_report.update({
                 "test_case": test['name'],
-                "original_color_path": "Color/" + test['name'] + '.png',
+                "original_color_path": "Color/" + test['name'] + '.jpg',
                 "original_render_log": test['name'] + '.or.log',
                 "render_device": cpuinfo.get_cpu_info()['brand'],
                 "file_name": test['name'] + '.png',
