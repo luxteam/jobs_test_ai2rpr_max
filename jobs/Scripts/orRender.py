@@ -119,6 +119,20 @@ def main():
             rc = 0
             break
 
+    for test in tests_list:
+        if test['status'] == 'active':
+            if os.path.exists(os.path.join(args.output_dir, test['name'] + '.or.render_time.log')):
+                try:
+                    with open(os.path.join(args.output_dir, test['name'] + '.or.render_time.log'), 'r') as file:
+                        time = file.read()
+                        with open(os.path.join(args.output_dir, test['name'] + '_AI.json'), 'r') as case_file:
+                            temp_case_report = json.loads(case_file.read())
+                        temp_case_report[0].update({"render_time": float(time)})
+                        with open(os.path.join(args.output_dir, test['name'] + '_AI.json'), 'w') as case_file:
+                            json.dump(temp_case_report, case_file, indent=4)
+                except Exception as err:
+                    main_logger.error("Error {} during AI time log parsing: {}".format(str(err), test['name'] + '.or.render_time.log'))
+
     return rc
 
 
