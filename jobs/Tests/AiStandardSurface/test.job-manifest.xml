@@ -5,7 +5,7 @@
     <variable name="GroupName" value="AiStandardSurface"/>
     <variable name="ScenesDirSubPath" value="Surface\\{GroupName}"/>
 
-    <execute command='python "{ResourcesDir}\\orRender.py"' timeout="20000">
+    <execute command='python "{ResourcesDir}\\orRender.py"' timeout="24000">
         <argument>--tests_list "{Root}\\Tests\\{GroupName}\\test.cases.json"</argument>
         <argument>--app_path "{Tool}"</argument>
         <argument>--assets_path "{ScenesDir}\\{ScenesDirSubPath}"</argument>
